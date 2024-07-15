@@ -3,7 +3,7 @@ import requests
 import json
 from datetime import  timedelta
 def calculate_real_time(timezone_offset):
-    current_time = datetime.datetime.now(datetime.UTC)
+    current_time = datetime.datetime.utcnow()
     target_time = current_time + timedelta(seconds=timezone_offset)
 
     return f"({target_time.hour:02d}:{target_time.minute:02d}:{target_time.second:02d}) {target_time.day:02d}/{target_time.month:02d}/{target_time.year:04d}"
@@ -19,10 +19,7 @@ with open('settings.json', 'r', encoding='utf-8') as f:
 def check_city(city):
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={bot_file["WEATHER_TOKEN"]}'
     respo = requests.get(url)
-    if respo.ok:
-        return True
-    else:
-        return False
+    return respo.status_code == 200
 
 
 
