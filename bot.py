@@ -52,13 +52,16 @@ def texting(message):
         else:
             bot.send_message(message.chat.id, text = 'Вы ввели некорректное место жительства, попробуйте еще раз🙏🏼')
     elif get_city:
-            cur.execute("UPDATE weather_table SET name_city = (?) WHERE id_user = (?)", (text_message, id_user))
-            conn.commit()
-            new_get_city = False
-            buttons = types.InlineKeyboardMarkup(row_width=1)
-            start = types.InlineKeyboardButton(text = 'назад', callback_data='start')
-            buttons.add(start)
-            bot.send_message(message.chat.id, text = 'Ваше место жительство добавлено', reply_markup=buttons)
+            if weather.check_city(text_message):
+                cur.execute("UPDATE weather_table SET name_city = (?) WHERE id_user = (?)", (text_message, id_user))
+                conn.commit()
+                new_get_city = False
+                buttons = types.InlineKeyboardMarkup(row_width=1)
+                start = types.InlineKeyboardButton(text = 'назад', callback_data='start')
+                buttons.add(start)
+                bot.send_message(message.chat.id, text = 'Ваше место жительство добавлено', reply_markup=buttons)
+            else:
+                bot.send_message(message.chat.id, text = 'Вы ввели некорректное место жительства, попробуйте еще раз🙏🏼')
 
 
 @bot.callback_query_handler(func=lambda call:True)
